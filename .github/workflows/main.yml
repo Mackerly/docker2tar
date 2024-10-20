@@ -7,6 +7,10 @@ on:
         description: '请填写 Docker 镜像名称 (多个用英文逗号分开)'
         required: true
         default: 'alpine:latest'
+      docker_arch:
+        description: '请填写 Docker 镜像架构'
+        required: true
+        default: 'amd64'
       tag:
         description: '可选: 发布标签 (默认为当前日期)'
         required: false
@@ -44,7 +48,7 @@ jobs:
           image_tag="${image##*:}"
 
           file_name="${image_name}.tar"
-          docker pull "${image}"
+          docker pull  --platform ${{ github.event.inputs.docker_arch }} "${image}"
           docker save "${image}" -o "${file_name}"
         done
 
