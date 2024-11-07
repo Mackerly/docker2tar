@@ -1,5 +1,7 @@
 name: Docker镜像智能打包离线包
 
+permissions: write-all        
+
 on:
   workflow_dispatch:
     inputs:
