@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       docker_images:
-        description: 'xiaoyaliu/alist:latest'
+        description: '请填写 Docker 镜像名称 (多个用英文逗号分开)'
         required: true
-        default: 'alpine:latest'
+        default: 'xiaoyaliu/alist:latest'
       docker_arch:
-        description: '请填写 Docker 镜像架构'
+        description: '请填写 Docker 镜像架构:amd64 arm64 arm '
         required: true
         default: 'amd64'
       tag:
