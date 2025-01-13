@@ -19,4 +19,11 @@
 ```bash
 # 假设镜像名字是 xxx.tar
 docker load -i xxx.tar
+
+# youshandefeiyang/allinone
+docker run -d --restart unless-stopped --net=host --privileged=true -p 35455:35455 --name allinone youshandefeiyang/allinone
+# 播放源地址：http://内网ip:35456/tv.php?h={allinoneIP}&p={allinonePort}&m=1&t=0
+
+# xiaoya
+docker create --privileged -p 5678:80 -p 2345:2345 -p 2346:2346 -p 2347:2347 -v /etc/xiaoya:/data -v /etc/xiaoya/data:/www/data --restart=always --name=xiaoya xiaoyaliu/alist:latest
 ```
