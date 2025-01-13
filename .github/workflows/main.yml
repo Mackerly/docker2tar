@@ -6,19 +6,24 @@ on:
   schedule:
     - cron: '0 12 * * *'
   workflow_dispatch:
-    inputs:
-      docker_images:
-        description: '请填写 Docker 镜像名称 (多个用英文逗号分开) youshandefeiyang/allinone'
-        required: true
-        default: 'xiaoyaliu/alist:latest'
-      docker_arch:
-        description: '请填写 Docker 镜像架构:amd64 arm64 arm '
-        required: true
-        default: 'amd64'
-      tag:
-        description: '可选: 发布标签 (默认为当前日期)'
-        required: false
+    # inputs:
+    #   docker_images:
+    #     description: '请填写 Docker 镜像名称 (多个用英文逗号分开) youshandefeiyang/allinone'
+    #     required: true
+    #     default: 'xiaoyaliu/alist:latest'
+    #   docker_arch:
+    #     description: '请填写 Docker 镜像架构:amd64 arm64 arm '
+    #     required: true
+    #     default: 'amd64'
+    #   tag:
+    #     description: '可选: 发布标签 (默认为当前日期)'
+    #     required: false
 
+env:
+  docker_images: xiaoyaliu/alist:latest
+  docker_arch: amd64
+  tag: ''
+  
 jobs:
   pull_and_package:
     runs-on: ubuntu-latest
