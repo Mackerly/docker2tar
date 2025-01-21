@@ -3,6 +3,9 @@ name: Docker镜像智能打包离线包-auto
 permissions: write-all        
 
 on:
+  push:
+    branches:
+      - main  # 只在推送到 main 分支时触发
   schedule:
     - cron: '0 11 * * *'
   workflow_dispatch:
@@ -49,8 +52,8 @@ jobs:
 
     - name: 拉取并保存多架构Docker镜像
       run: |
-        images="${{ github.event.inputs.docker_images }}" || "$docker_images"
-        docker_arch="${{ github.event.inputs.docker_arch }}" || "$docker_arch"
+        images="${{ github.event.inputs.docker_images }}" || $docker_images
+        docker_arch="${{ github.event.inputs.docker_arch }}" || $docker_arch
         IFS=',' read -r -a image_array <<< "$images"
         for image in "${image_array[@]}"; do
           image_name_with_registry="${image%%:*}"
@@ -69,7 +72,7 @@ jobs:
     - name: 确定文件处理逻辑
       id: determine_logic
       run: |
-        images="${{ github.event.inputs.docker_images }}"  || "$docker_images"
+        images="${{ github.event.inputs.docker_images }}"  || $docker_images
         IFS=',' read -r -a image_array <<< "$images"
         num_images=${#image_array[@]}
 
