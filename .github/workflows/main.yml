@@ -50,7 +50,7 @@ jobs:
     - name: 拉取并保存多架构Docker镜像
       run: |
         images="${{ github.event.inputs.docker_images }}"
-        echo $images
+        echo "${images}"
         IFS=',' read -r -a image_array <<< "$images"
         for image in "${image_array[@]}"; do
           image_name_with_registry="${image%%:*}"
