@@ -3,8 +3,8 @@ name: Docker镜像智能打包离线包
 permissions: write-all        
 
 on:
-  schedule:
-    - cron: '0 12 * * *'
+  #schedule:
+  #  - cron: '0 12 * * *'
   workflow_dispatch:
     inputs:
       docker_images:
