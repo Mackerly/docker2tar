@@ -1,0 +1,32 @@
+name: Alist 小雅数据下载
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at 00:00 UTC (08:00 Beijing time)
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 设置日期格式为 YYYY-MM-DD
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
+      - name: 下载文件
+        run: |
+          mkdir data
+          curl -L -o data/version.txt https://raw.githubusercontent.com/xiaoyaDev/data/main/version.txt
+          curl -L -o data/tvbox.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/tvbox.zip
+          curl -L -o data/update.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/update.zip
+          curl -L -o data/index.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/index.zip
+
+      - name: 打包文件
+        run: tar -czvf ${{ steps.date.outputs.date }}_alist_data.tar.gz data/*
+
+      - name: 创建或提交 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.date.outputs.date }}
+          name: Alist Data ${{ steps.date.outputs.date }}
+          files: ${{ steps.date.outputs.date }}_alist_data.tar.gz
