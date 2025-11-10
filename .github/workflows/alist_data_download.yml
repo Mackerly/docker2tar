@@ -30,3 +30,9 @@ jobs:
           tag_name: ${{ steps.date.outputs.date }}
           name: Alist Data ${{ steps.date.outputs.date }}
           files: ${{ steps.date.outputs.date }}_alist_data.tar.gz
+
+      - name: 删除三天前的 release
+        continue-on-error: true
+        run: |
+          three_days_ago=$(date -d "3 days ago" +%Y-%m-%d)
+          gh release delete $three_days_ago --yes
