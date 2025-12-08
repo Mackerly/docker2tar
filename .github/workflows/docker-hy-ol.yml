@@ -1,0 +1,78 @@
+name: Build and Push hy_ol Docker Image
+
+# 触发条件
+on:
+  push:
+    branches:
+      - main            # 根据你的主分支改成 master/main/trunk 等
+    paths:
+      - 'hy_ol/**'      # 只有 hy_ol 目录有改动才触发
+      - '.github/workflows/docker-hy-ol.yml'
+  workflow_dispatch:    # 允许手动触发
+
+# 环境变量（整个 workflow 可用）
+env:
+  IMAGE_NAME: yourname/hy-ol        # ←←← 改成你的 Docker Hub 用户名/仓库名
+  DOCKERFILE_PATH: hy_ol/Dockerfile
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write          # 如果你也推到 GitHub Container Registry 可以要
+
+    steps:
+      # 1. 拉取代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # 为了能正确获取 git tag
+
+      # 2. 设置 QEMU（支持多架构构建）
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # 3. 设置 Docker Buildx（支持多架构）
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. 登录 Docker Hub
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 5. 生成镜像标签
+      - name: Generate tags
+        id: meta
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-8)
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          TAGS="${{ env.IMAGE_NAME }}:latest,${{ env.IMAGE_NAME }}:${SHORT_SHA}"
+          if [[ -n "$VERSION" ]]; then
+            TAGS="${TAGS},${{ env.IMAGE_NAME }}:${VERSION}"
+          fi
+          
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+          echo "Tags to build: $TAGS"
+
+      # 6. 构建并推送镜像（支持 linux/amd64 和 linux/arm64）
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ env.DOCKERFILE_PATH }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
+          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
+
+      # 7. （可选）输出镜像消化值
+      - name: Show image digest
+        run: |
+          echo "Image pushed:"
+          docker buildx imagetools inspect ${{ env.IMAGE_NAME }}:latest
