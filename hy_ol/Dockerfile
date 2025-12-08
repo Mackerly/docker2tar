@@ -10,7 +10,7 @@ VOLUME ["/data", "/data/hysteria2/"]
 USER root
 
 # 复制 supervisord 配置文件和自定义脚本
-COPY supervisord.conf ser.yml.template entrypoint.sh /
+COPY hy_ol/supervisord.conf hy_ol/ser.yml.template entrypoint.sh /
 
 # 更新包索引并安装 supervisor 和 nginx
 RUN apk update && \
