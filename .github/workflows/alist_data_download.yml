@@ -1,8 +1,8 @@
 name: Alist 小雅数据下载
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Daily at 00:00 UTC (08:00 Beijing time)
+  #schedule:
+    #- cron: '0 0 * * *'  # Daily at 00:00 UTC (08:00 Beijing time)
   workflow_dispatch:
 
 jobs:
