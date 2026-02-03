@@ -9,9 +9,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: 设置日期格式为 YYYY-MM-DD
+      - name: 设置日期格式为 YYYYMMDD
         id: date
-        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+        run: echo "date=$(date +%Y%m%d)" >> $GITHUB_OUTPUT
 
       - name: 下载文件
         run: |
