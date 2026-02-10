@@ -20,6 +20,7 @@ jobs:
           curl -L -o data/tvbox.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/tvbox.zip
           curl -L -o data/update.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/update.zip
           curl -L -o data/index.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/index.zip
+          curl -L -o data/strm.zip https://raw.githubusercontent.com/xiaoyaDev/data/main/strm.zip
           curl -L -o data/115share_list.txt https://raw.githubusercontent.com/xiaoyaDev/data/main/115share_list.txt
 
       - name: 打包文件
