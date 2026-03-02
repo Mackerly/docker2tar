@@ -3,7 +3,7 @@ FROM alpine:latest
 RUN apk add --no-cache openssl wget  bash gettext tzdata curl ca-certificates
 
 ENV TZ=Asia/Shanghai
-COPY ser.yml.template /
+COPY hy_ol/ser.yml.template /
 
 WORKDIR /data
 
