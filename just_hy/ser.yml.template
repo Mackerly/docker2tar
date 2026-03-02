@@ -1,0 +1,9 @@
+listen: :${PORT}
+speedTest: true
+tls: 
+  cert: /hy2.crt
+  key: /hy2.key
+  sniGuard: disable
+auth:
+  type: password
+  password: ${PASSWORD}
