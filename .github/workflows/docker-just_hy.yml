@@ -1,4 +1,4 @@
-name: Build and Push hy_ol Docker Image
+name: Build and Push just_hy Docker Image
 
 # 触发条件
 on:
