@@ -1,4 +1,4 @@
-name: Build and Push hy_ol Docker Image
+name: 编译和推送 hy_ol 镜像
 
 # 触发条件
 on:
@@ -9,12 +9,7 @@ on:
       - 'hy_ol/**'      # 只有 hy_ol 目录有改动才触发
       - '.github/workflows/docker-hy-ol.yml'
   workflow_dispatch:    # 允许手动触发
-    inputs:
-        app_version:
-          description: 'Hysteria 版本号 (APP_VERSION，如：2.8.1)'
-          required: true
-          default: '2.8.1'
-          type: string
+
 
 # 环境变量（整个 workflow 可用）
 env:
@@ -74,8 +69,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          build-args: |
-            APP_VERSION=${{ inputs.app_version }}
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
 
