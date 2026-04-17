@@ -69,8 +69,8 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
-          cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
+          #cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
+          #cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
 
       # 7. （可选）输出镜像消化值
       - name: Show image digest
