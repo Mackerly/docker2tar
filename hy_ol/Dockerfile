@@ -1,6 +1,8 @@
 # 使用 Alpine Linux 作为基础镜像，轻量且适合容器
 FROM openlistteam/openlist:latest
 
+ARG APP_VERSION=2.8.1    # 默认值
+
 # 设置环境变量以确保终端支持彩色输出（可选）
 ENV TERM=xterm-256color
 ENV TZ=Asia/Shanghai
@@ -17,7 +19,7 @@ RUN apk update && \
     apk add --no-cache vim  openssl envsubst wget bash gettext tzdata ca-certificates curl supervisor sqlite && \
     rm -rf /var/cache/apk/* && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    wget https://github.com/apernet/hysteria/releases/download/app%2Fv2.7.1/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
+    wget https://github.com/apernet/hysteria/releases/download/app%2Fv$APP_VERSION/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     mkdir -p /var/log/supervisor /data/hysteria2/ /var/log/supervisor/ /var/log/openlist/  /var/run/ /var/log/hysteria2/ &&\
     chmod +x /usr/bin/hysteria-linux-amd64 && \
     openssl genrsa -out /hy2.key 2048 && \
