@@ -7,7 +7,7 @@ COPY hy_ol/ser.yml.template /
 
 WORKDIR /data
 
-RUN wget https://github.com/apernet/hysteria/releases/download/app%2Fv2.7.1/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
+RUN wget https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     chmod +x /usr/bin/hysteria-linux-amd64 && \
     openssl genrsa -out /hy2.key 2048 && \
     openssl req -new -x509 -key /hy2.key -out /hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=www.ooyy.com" && \
