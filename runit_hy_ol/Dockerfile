@@ -4,14 +4,13 @@ FROM openlistteam/openlist:latest
 # 设置环境变量以确保终端支持彩色输出（可选）
 ENV TERM=xterm-256color
 ENV TZ=Asia/Shanghai
-COPY hy_ol/ser.yml.template /
+
+# 复制 supervisord 配置文件和自定义脚本
+COPY hy_ol/ser.yml.template hy_ol/entrypoint.sh /
 
 VOLUME ["/data", "/data/hysteria2/"] 
 
 USER root
-
-# 复制 supervisord 配置文件和自定义脚本
-COPY ser.yml.template entrypoint.sh /
 
 # 更新包索引并安装 supervisor 和 nginx
 RUN apk update && \
