@@ -6,7 +6,7 @@ on:
     branches:
       - main            # 根据你的主分支改成 master/main/trunk 等
     paths:
-      - 'hy_ol/**'      # 只有 hy_ol 目录有改动才触发
+      - 'runit_hy_ol/**'      # 只有 runit_hy_ol 目录有改动才触发
       - '.github/workflows/runit_hy_ol.yml.yml'
   workflow_dispatch:    # 允许手动触发
 
