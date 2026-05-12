@@ -4,6 +4,7 @@ FROM openlistteam/openlist:latest
 # 设置环境变量以确保终端支持彩色输出（可选）
 ENV TERM=xterm-256color
 ENV TZ=Asia/Shanghai
+COPY hy_ol/ser.yml.template /
 
 VOLUME ["/data", "/data/hysteria2/"] 
 
