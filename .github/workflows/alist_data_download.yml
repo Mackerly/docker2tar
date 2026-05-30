@@ -27,7 +27,7 @@ jobs:
         run: tar -czvf ${{ steps.date.outputs.date }}_alist_data.tar.gz data/*
 
       - name: 创建或提交 Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.date.outputs.date }}
           name: Alist Data ${{ steps.date.outputs.date }}
