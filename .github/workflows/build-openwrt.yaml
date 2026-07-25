@@ -32,6 +32,7 @@ jobs:
       run: |
         git clone https://git.openwrt.org/openwrt/openwrt.git
         cd openwrt
+        pwd && ls -l
         git checkout v24.10.8 # 切换到指定的 tag
         sed -i '462s/.*/\tIMAGE_SIZE := 16000k/' target/linux/ramips/image/mt76x8.mk
         sed -i 's/reg = <0x50000 0x7b0000>/reg = <0x50000 0xfb0000>;/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts
