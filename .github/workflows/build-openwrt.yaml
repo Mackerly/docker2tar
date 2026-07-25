@@ -1,0 +1,65 @@
+name: OpenWrt Build
+
+on:
+  # push:
+  #   branches: [ main ]
+  # workflow_dispatch:
+
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  FEEDS_CONF: feeds.conf.default
+  CONFIG_FILE: .config
+  DIY_P1_SH: diy-part1.sh
+  DIY_P2_SH: diy-part2.sh
+  UPLOAD_BIN_DIR: false
+  UPLOAD_FIRMWARE: true
+  UPLOAD_RELEASE: true
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: 安装依赖
+      run: |
+        sudo timedatectl set-timezone "$TZ"
+        sudo apt-get update
+        sudo apt-get install -y build-essential clang libssl-dev libncurses5-dev \
+          libncursesw5-dev zlib1g-dev gawk git gettext curl wget rsync perl \
+          python3 mkisofs ecj fastjar java-propose-classpath
+    
+    - name: 克隆 OpenWrt 并 切换到对应的版本
+      run: |
+        git clone https://git.openwrt.org/openwrt/openwrt.git
+        cd openwrt
+        git checkout v24.10.8 # 切换到指定的 tag
+    
+    - name: 更新 Feeds
+      run: |
+        cd openwrt
+        ./scripts/feeds update -a
+        ./scripts/feeds install -a
+    
+    - name: 应用配置文件
+      run: |
+        cd openwrt
+        # 从仓库中复制预配置的 .config
+        cp ../.config .config 2>/dev/null || make defconfig
+        # 或直接内联配置
+        echo "CONFIG_PACKAGE_luci=y" >> .config
+        make defconfig
+    
+    - name: 编译
+      run: |
+        cd openwrt
+        make -j$(nproc) V=s
+    
+    - name: 上传固件
+      uses: actions/upload-artifact@v3
+      with:
+        name: OpenWrt-firmware
+        path: openwrt/bin/targets/
