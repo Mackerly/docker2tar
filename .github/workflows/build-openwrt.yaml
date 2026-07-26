@@ -47,7 +47,7 @@ jobs:
     - name: 应用配置文件
       run: |
         cd openwrt
-        rm .config
+        [ -e .config ] && rm .config
         # 从仓库中复制预配置的 .config
         cp openwrt_config/myconfig .config
         make defconfig
