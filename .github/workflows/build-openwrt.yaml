@@ -48,8 +48,8 @@ jobs:
       run: |
         cd openwrt
         # 从仓库中复制预配置的 .config
-        cp openwrt/.config .config 2>/dev/null
-        # make defconfig
+        cp openwrt/myconfig .config
+        make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
@@ -73,7 +73,7 @@ jobs:
       if: steps.compile.outputs.status == 'success'
       with:
         name: OpenWrt-firmware
-        path: openwrt/bin
+        path: openwrt/bin/targets
 
     - name: Organize files
       id: organize
