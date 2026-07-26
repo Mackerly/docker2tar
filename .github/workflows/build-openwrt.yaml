@@ -53,7 +53,8 @@ jobs:
         ls -la
         ls -la openwrt_config || true
         ls -la openwrt_config/myconfig || true
-        cp "${{ github.workspace }}/openwrt_config/myconfig" .config
+        ls -la "${{ github.workspace }}" || true
+        cp "${{ github.workspace }}/openwrt_config/76x8.config" .config
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
