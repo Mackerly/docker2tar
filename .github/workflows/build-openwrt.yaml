@@ -1,8 +1,8 @@
 name: 编译 OpenWRT
 
 on:
-  push:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
   workflow_dispatch:
 
 env:
