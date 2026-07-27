@@ -47,7 +47,7 @@ jobs:
         python2 --version
 
     
-    - name: 克隆 OpenWrt 并切换到对应的版本
+    - name: 克隆 OpenWrt 并切换到对应的版本  ${{ env.TAG }}
       run: |
         rm -rf openwrt  # 删除已存在的目录
         git clone https://git.openwrt.org/openwrt/openwrt.git
