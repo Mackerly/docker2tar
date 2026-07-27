@@ -7,14 +7,14 @@ on:
 
 env:
   TZ: Asia/Shanghai
-
+  TAG: v19.07.10
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@main
     
     - name: 安装依赖
       run: |
@@ -29,15 +29,28 @@ jobs:
           python3-dev python3-setuptools rsync subversion swig texinfo time u-boot-tools \
           unzip wget xsltproc xxd zlib1g-dev zstd
     
-    - name: 克隆 OpenWrt 并 切换到对应的版本
+    - name: 克隆 OpenWrt 并切换到对应的版本
       run: |
         rm -rf openwrt  # 删除已存在的目录
         git clone https://git.openwrt.org/openwrt/openwrt.git
         cd openwrt
+        git checkout ${{ env.TAG }} # 切换到指定的 tag
+
+    - name: 修改 v24.10.8 的 DTS 和 mk 文件
+      if: env.TAG != 'v24.10.8'
+      run: |
+        cd openwrt
         git checkout v24.10.8 # 切换到指定的 tag
         sed -i '462s/7872/16000/'  target/linux/ramips/image/mt76x8.mk
-        sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts
-    
+        sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
+
+    - name: 修改 v19.07.10 的 DTS 和 mk 文件
+      if: env.TAG != 'v19.07.10'
+      run: |
+        cd openwrt
+        sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
+        sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
+
     - name: 更新 Feeds
       run: |
         cd openwrt
@@ -49,12 +62,8 @@ jobs:
         cd openwrt
         [ -e .config ] && rm .config
         # 从仓库中复制预配置的 .config
-        pwd
-        ls -la
-        ls -la openwrt_config || true
-        ls -la openwrt_config/myconfig || true
-        ls -la "${{ github.workspace }}" || true
-        cp "${{ github.workspace }}/openwrt_config/76x8.config" .config
+        # cp "${{ github.workspace }}/openwrt_config/76x8.config" .config
+        cp "${{ github.workspace }}/openwrt_config/ZBT-WE1226.config" .config
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
