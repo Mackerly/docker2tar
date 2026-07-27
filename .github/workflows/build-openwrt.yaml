@@ -47,11 +47,11 @@ jobs:
         python2 --version
 
     
-    # - name: 克隆 OpenWrt 并切换到对应的版本  ${{ env.TAG }}
-    #   run: |
-    #     rm -rf openwrt  # 删除已存在的目录
-    #     git clone https://git.openwrt.org/openwrt/openwrt.git
-    #     cd openwrt
+    - name: 克隆 OpenWrt 并切换到对应的版本  ${{ env.TAG }}
+      run: |
+        rm -rf openwrt  # 删除已存在的目录
+        git clone https://git.openwrt.org/openwrt/openwrt.git
+    #    cd openwrt
     #     git checkout ${{ env.TAG }} # 切换到指定的 tag 会因为kmod版本等不对，导致无法使用官方源
 
     - name: 修改 v24.10.8 的 DTS 和 mk 文件
