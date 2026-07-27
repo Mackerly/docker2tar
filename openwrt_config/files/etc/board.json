@@ -1,0 +1,118 @@
+{
+	"model": {
+		"id": "zbtlink,zbt-we1226",
+		"name": "Zbtlink ZBT-WE1226"
+	},
+	"led": {
+		"wifi_led": {
+			"name": "wifi",
+			"sysfs": "zbt-we1226:green:wlan",
+			"type": "netdev",
+			"device": "wlan0",
+			"mode": "link tx rx"
+		},
+		"lan1": {
+			"name": "LAN1",
+			"sysfs": "zbt-we1226:green:lan1",
+			"trigger": "switch0",
+			"type": "switch",
+			"mode": "",
+			"port_mask": "0x01",
+			"speed_mask": ""
+		},
+		"lan2": {
+			"name": "LAN2",
+			"sysfs": "zbt-we1226:green:lan2",
+			"trigger": "switch0",
+			"type": "switch",
+			"mode": "",
+			"port_mask": "0x02",
+			"speed_mask": ""
+		},
+		"lan3": {
+                        "name": "LAN3",
+                        "sysfs": "zbt-we1226:green:lan3",
+                        "trigger": "switch0",
+                        "type": "switch",
+                        "mode": "",
+                        "port_mask": "0x03",
+                        "speed_mask": ""
+                },
+		"lan4": {
+                        "name": "LAN4",
+                        "sysfs": "zbt-we1226:green:lan4",
+                        "trigger": "switch0",
+                        "type": "switch",
+                        "mode": "",
+                        "port_mask": "0x04",
+                        "speed_mask": ""
+                },
+		"wan": {
+			"name": "WAN",
+			"sysfs": "zbt-we1226:green:wan",
+			"trigger": "switch0",
+			"type": "switch",
+			"mode": "",
+			"port_mask": "0x10",
+			"speed_mask": ""
+		}
+	},
+	"switch": {
+		"switch0": {
+			"enable": true,
+			"reset": true,
+			"ports": [
+				{
+					"num": 0,
+					"role": "lan",
+				},
+				{
+					"num": 1,
+					"role": "lan",
+				},
+				{                        
+                                        "num": 2,        
+                                        "role": "lan",   
+                                },
+                                {                        
+                                        "num": 3,        
+                                        "role": "lan",   
+                                },  
+				{
+					"num": 4,
+					"role": "wan"
+				},
+				{
+					"num": 6,
+					"device": "eth0",
+					"need_tag": false,
+					"want_untag": false
+				}
+			],
+			"roles": [
+				{
+					"role": "lan",
+					"ports": "0 1 2 3 6t",
+					"device": "eth0.1"
+				},
+				{
+					"role": "wan",
+					"ports": "4 6t",
+					"device": "eth0.2"
+				}
+			]
+		}
+	},
+	"network": {
+		"lan": {
+			"ifname": "eth0.1",
+			"protocol": "static",
+			"macaddr": "78:a3:51:f7:61:f7"
+		},
+		"wan": {
+			"ifname": "eth0.2",
+			"protocol": "dhcp",
+			"macaddr": "78:a3:51:f7:61:f8"
+		}
+	}
+}
