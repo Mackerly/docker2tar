@@ -37,7 +37,7 @@ jobs:
         git checkout ${{ env.TAG }} # 切换到指定的 tag
 
     - name: 修改 v24.10.8 的 DTS 和 mk 文件
-      if: env.TAG != 'v24.10.8'
+      if: env.TAG == 'v24.10.8'
       run: |
         cd openwrt
         git checkout v24.10.8 # 切换到指定的 tag
@@ -45,14 +45,14 @@ jobs:
         sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
 
     - name: 修改 v19.07.10 的 DTS 和 mk 文件
-      if: env.TAG != 'v19.07.10'
+      if: env.TAG == 'v19.07.10'
       run: |
         cd openwrt
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
 
     - name: 自定义Board Config
-      if: env.TAG != 'v19.07.10'
+      if: env.TAG == 'v19.07.10'
       run: |
         cd openwrt
         # 1. 创建目标目录（如果不存在）
