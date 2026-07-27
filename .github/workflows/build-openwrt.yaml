@@ -27,7 +27,7 @@ jobs:
           gettext git help2man libbsd-dev libelf-dev liblzma-dev libncurses-dev \
           libssl-dev mtd-utils meson mold mtd-utils ninja-build pbzip2 pigz pkg-config \
           python3-dev python3-setuptools rsync subversion swig texinfo time u-boot-tools \
-          unzip wget xsltproc xxd zlib1g-dev zstd
+          unzip wget xsltproc xxd zlib1g-dev zstd python2
     
     - name: 克隆 OpenWrt 并切换到对应的版本
       run: |
@@ -66,7 +66,7 @@ jobs:
         [ -f "$BOARD_JSON" ] || exit 0
         
         OLD_STR='"0:lan:2" "1:lan:1" "4:wan" "6@eth0"'
-        NEW_STR='"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "6@eth0"'
+        NEW_STR='"0:lan" "1:lan" "2:lan" "3:lan" "4:wan" "6@eth0"'
         
         sed -i "s/$OLD_STR/$NEW_STR/g" "$BOARD_JSON"
         exit 0
