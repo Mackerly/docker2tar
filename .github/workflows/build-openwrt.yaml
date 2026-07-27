@@ -27,7 +27,7 @@ jobs:
           gettext git help2man libbsd-dev libelf-dev liblzma-dev libncurses-dev \
           libssl-dev mtd-utils meson mold mtd-utils ninja-build pbzip2 pigz pkg-config \
           python3-dev python3-setuptools rsync subversion swig texinfo time u-boot-tools \
-          unzip wget xsltproc xxd zlib1g-dev zstd
+          unzip wget xsltproc xxd zlib1g-dev zstd python2
 
     - name: 安装 Python 2.7 环境，用于编译 openwrt 19.x
       if: env.TAG == 'v19.07.101'
