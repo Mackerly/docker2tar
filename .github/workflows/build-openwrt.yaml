@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
     - uses: actions/checkout@main
@@ -30,7 +30,7 @@ jobs:
           unzip wget xsltproc xxd zlib1g-dev zstd
 
     - name: 安装 Python 2.7 环境，用于编译 openwrt 19.x
-      if: env.TAG == 'v19.07.10'
+      if: env.TAG == 'v19.07.101'
       run: |
         # 1. 允许 Ubuntu 22.04 及以上系统从官方 universe 软件源中寻找 python2
         sudo apt-get update
