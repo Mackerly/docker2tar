@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# 检查文件是否存在
+BOARD_JSON="/etc/board.json"
+[ -f "$BOARD_JSON" ] || exit 0
+
+# 定义原始和目标字符串（包含转义的双引号）
+OLD_STR='"0:lan:2" "1:lan:1" "4:wan" "6@eth0"'
+NEW_STR='"1:lan" "2:lan" "3:lan" "4:lan" "0:wan" "6@eth0"'
+
+# 使用 sed 精准替换该内容（不受行号限制，防止因固件升级导致行号偏移）
+sed -i "s/$OLD_STR/$NEW_STR/g" "$BOARD_JSON"
+
+exit 0
