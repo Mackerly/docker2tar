@@ -51,7 +51,7 @@ jobs:
         cd openwrt
         git checkout ${{ env.TAG }} # 来源对应官方下载的 version.buildinfo,不知道为什么，会变成SNAPSHOT,所以还是换成准确的版本吧
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
-        curl -L -o feeds.conf "https://archive.openwrt.org/releases/19.07.10/targets/ramips/mt76x8/feeds.buildinfo"
+
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
 
