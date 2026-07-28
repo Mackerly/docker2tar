@@ -56,7 +56,7 @@ jobs:
       if: env.TAG == 'v19.07.10'
       run: |
         cd openwrt
-        cp -r "${{ github.workspace }}/openwrt_config/files .
+        cp -r "${{ github.workspace }}/openwrt_config/files" .
         
         # 1. 创建目标目录（如果不存在）
         mkdir -p files/etc/uci-defaults
