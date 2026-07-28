@@ -28,24 +28,6 @@ jobs:
           libssl-dev mtd-utils meson mold mtd-utils ninja-build pbzip2 pigz pkg-config \
           python3-dev python3-setuptools rsync subversion swig texinfo time u-boot-tools \
           unzip wget xsltproc xxd zlib1g-dev zstd python2
-
-    - name: 安装 Python 2.7 环境，用于编译 openwrt 19.x
-      if: env.TAG == 'v19.07.101'
-      run: |
-        # 1. 允许 Ubuntu 22.04 及以上系统从官方 universe 软件源中寻找 python2
-        sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        
-        # 2. 安装 Python2 核心与基本库
-        sudo apt-get install -y python2 python2-dev python-is-python2
-        
-        # 3. 补全 OpenWrt 19 编译所需的额外特定 Python 库（部分老固件可能需要）
-        sudo apt-get install -y python-crypto python-openssl || true
-        
-        # 4. 验证环境是否生效
-        python --version
-        python2 --version
-
     
     - name: 克隆 OpenWrt 并切换到对应的版本  ${{ env.TAG }}
       run: |
@@ -74,23 +56,11 @@ jobs:
       if: env.TAG == 'v19.07.10'
       run: |
         cd openwrt
+        cp -r "${{ github.workspace }}/openwrt_config/files .
+        
         # 1. 创建目标目录（如果不存在）
         mkdir -p files/etc/uci-defaults
-        
-        # 2. 写入修改 board.json 的脚本内容
-        ##########################################
-        cat << 'EOF' > files/etc/uci-defaults/99-modify-board
-        #!/bin/sh
-        BOARD_JSON="/etc/board.json"
-        [ -f "$BOARD_JSON" ] || exit 0
-        
-        OLD_STR='"0:lan:2" "1:lan:1" "4:wan" "6@eth0"'
-        NEW_STR='"0:lan" "1:lan" "2:lan" "3:lan" "4:wan" "6@eth0"'
-        
-        sed -i "s/$OLD_STR/$NEW_STR/g" "$BOARD_JSON"
-        exit 0
-        EOF
-        ##########################################
+
         cat << 'EOF' > files/etc/uci-defaults/fist_settings
         #!/bin/sh
 
@@ -117,13 +87,13 @@ jobs:
         uci commit
 
         sed -i '/option disabled/d' /etc/config/wireless  
+
+        sed -i 's/net.netfilter.nf_conntrack_max=16384/net.netfilter.nf_conntrack_max=65535/g' /etc/sysctl.d/11-nf-conntrack.conf
         
         exit 0
         EOF
-
         
         # 3. 赋予脚本执行权限
-        chmod +x files/etc/uci-defaults/99-modify-board 
         chmod +x files/etc/uci-defaults/fist_settings
 
     - name: 更新 Feeds
