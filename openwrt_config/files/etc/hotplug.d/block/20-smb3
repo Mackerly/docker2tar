@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# logger -t "hotplug-debug" "ACTION='$ACTION', DEVICENAME='$DEVICENAME', MOUNTPOINTS='$MOUNTPOINTS'"
+# logread | grep hotplug-debug# 检查事件类型，OpenWrt 19.07 的 block-mount 会在挂载/卸载时触发
+
+# 若你的系统环境仅触发 add/remove，可酌情微调
+[ "$ACTION" = "add" ] || [ "$ACTION" = "remove" ] || exit 0
+
+# 获取挂载路径和设备名
+# 示例: MOUNT_PATH="/mnt/sda1", SHARE_NAME="sda1"
+MOUNT_PATH="$MOUNTPOINTS"
+[ -z "$MOUNT_PATH" ] && exit 0
+SHARE_NAME=$(basename "$MOUNT_PATH")
+
+case "$ACTION" in
+    mount)
+        # 避免重复添加
+        uci show samba | grep -q "path='$MOUNT_PATH'" && exit 0
+        
+        # 动态向 /etc/config/samba 增加共享节点
+        uci -q batch <<EOF
+add samba sambashare
+set samba.@sambashare[-1].name='$SHARE_NAME'
+set samba.@sambashare[-1].path='$MOUNT_PATH'
+set samba.@sambashare[-1].guest_ok='yes'
+set samba.@sambashare[-1].create_mask='0777'
+set samba.@sambashare[-1].dir_mask='0777'
+set samba.@sambashare[-1].read_only='no'
+commit samba
+EOF
+        /etc/init.d/samba restart
+        ;;
+        
+    umount)
+        # 寻找对应路径的配置索引并删除
+        idx=0
+        while true; do
+            path=$(uci -q get samba.@sambashare[$idx].path)
+            [ -z "$path" ] && break
+            if [ "$path" = "$MOUNT_PATH" ]; then
+                uci -q delete samba.@sambashare[$idx]
+                uci commit samba
+                /etc/init.d/samba restart
+                break
+            fi
+            idx=$((idx + 1))
+        done
+        ;;
+esac
