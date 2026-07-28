@@ -33,13 +33,15 @@ jobs:
       run: |
         rm -rf openwrt  # 删除已存在的目录
         git clone https://git.openwrt.org/openwrt/openwrt.git
-    #    cd openwrt
-    #     git checkout ${{ env.TAG }} # 切换到指定的 tag 会因为kmod版本等不对，导致无法使用官方源
+        # cd openwrt
+        # echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
+        # git checkout ${{ env.TAG }} # 切换到指定的 tag 会因为kmod版本等不对，导致无法使用官方源
 
     - name: 修改 v24.10.8 的 DTS 和 mk 文件
       if: env.TAG == 'v24.10.8'
       run: |
         cd openwrt
+        echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
         sed -i '462s/7872/16000/'  target/linux/ramips/image/mt76x8.mk
         sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
 
@@ -48,6 +50,7 @@ jobs:
       run: |
         cd openwrt
         git checkout 9ce6aa9d8d # 来源对应官方下载的 version.buildinfo
+        echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
         curl -L -o feeds.conf "https://archive.openwrt.org/releases/19.07.10/targets/ramips/mt76x8/feeds.buildinfo"
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
