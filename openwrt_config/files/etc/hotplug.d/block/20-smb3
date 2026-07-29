@@ -1,49 +1,49 @@
 #!/bin/sh
 
-# logger -t "hotplug-debug" "ACTION='$ACTION', DEVICENAME='$DEVICENAME', MOUNTPOINTS='$MOUNTPOINTS'"
-# logread | grep hotplug-debug# 检查事件类型，OpenWrt 19.07 的 block-mount 会在挂载/卸载时触发
+SCRIPT_NAME=$(basename "$0")
 
-# 若你的系统环境仅触发 add/remove，可酌情微调
-[ "$ACTION" = "add" ] || [ "$ACTION" = "remove" ] || exit 0
+logger -t HOTPLUG "$SCRIPT_NAME" "PRODUCT ID is " $SUBSYSTEM $ACTION
+echo "<5> $SCRIPT_NAME is run " > /dev/kmsg
 
-# 获取挂载路径和设备名
-# 示例: MOUNT_PATH="/mnt/sda1", SHARE_NAME="sda1"
-MOUNT_PATH="$MOUNTPOINTS"
-[ -z "$MOUNT_PATH" ] && exit 0
-SHARE_NAME=$(basename "$MOUNT_PATH")
 
-case "$ACTION" in
-    mount)
-        # 避免重复添加
-        uci show samba | grep -q "path='$MOUNT_PATH'" && exit 0
-        
-        # 动态向 /etc/config/samba 增加共享节点
-        uci -q batch <<EOF
-add samba sambashare
-set samba.@sambashare[-1].name='$SHARE_NAME'
-set samba.@sambashare[-1].path='$MOUNT_PATH'
-set samba.@sambashare[-1].guest_ok='yes'
-set samba.@sambashare[-1].create_mask='0777'
-set samba.@sambashare[-1].dir_mask='0777'
-set samba.@sambashare[-1].read_only='no'
-commit samba
-EOF
-        /etc/init.d/samba restart
-        ;;
-        
-    umount)
-        # 寻找对应路径的配置索引并删除
-        idx=0
-        while true; do
-            path=$(uci -q get samba.@sambashare[$idx].path)
-            [ -z "$path" ] && break
-            if [ "$path" = "$MOUNT_PATH" ]; then
-                uci -q delete samba.@sambashare[$idx]
-                uci commit samba
-                /etc/init.d/samba restart
-                break
-            fi
-            idx=$((idx + 1))
-        done
-        ;;
+# 过滤不需要的设备（比如 mtdblock 或 loop 设备）
+case "$DEVNAME" in
+    sd*|mmcblk*) ;;
+    *) exit 0 ;;
 esac
+
+# 设置挂载目录基路径（根据你实际挂载的路径修改，例如 /mnt/$DEVNAME 或 /mnt/usb-$DEVNAME）
+MOUNT_POINT="/mnt/$DEVNAME"
+SECTION_NAME="share_$DEVNAME"
+
+if [ "$ACTION" = "add" ]; then
+    # 等待一会确保挂载脚本已完成挂载（如果挂载和Samba在同一个脚本中则不需要 sleep）
+    sleep 2
+    
+    # 检查挂载点是否存在且已挂载
+    if mountpoint -q "$MOUNT_POINT" || [ -d "$MOUNT_POINT" ]; then
+        # 赋予该挂载点全权限（解决 Samba 访问无权限问题）
+        chmod 777 "$MOUNT_POINT"
+        
+        # 使用 UCI 添加 Samba 共享配置
+        uci set samba.${SECTION_NAME}=sambashare
+        uci set samba.${SECTION_NAME}.name="${DEVNAME}"
+        uci set samba.${SECTION_NAME}.path="${MOUNT_POINT}"
+        uci set samba.${SECTION_NAME}.read_only='no'
+        uci set samba.${SECTION_NAME}.guest_ok='yes'
+        uci set samba.${SECTION_NAME}.create_mask='0777'
+        uci set samba.${SECTION_NAME}.dir_mask='0777'
+        
+        # 提交配置并重载 Samba 服务
+        uci commit samba
+        /etc/init.d/samba reload
+    fi
+
+elif [ "$ACTION" = "remove" ]; then
+    # 检查是否存在对应的 UCI 配置，存在则删除
+    if uci get samba.${SECTION_NAME} >/dev/null 2>&1; then
+        uci delete samba.${SECTION_NAME}
+        uci commit samba
+        /etc/init.d/samba reload
+    fi
+fi
