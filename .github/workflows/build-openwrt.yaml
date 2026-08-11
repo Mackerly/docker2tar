@@ -27,7 +27,8 @@ jobs:
           gettext git help2man libbsd-dev libelf-dev liblzma-dev libncurses-dev \
           libssl-dev mtd-utils meson mold mtd-utils ninja-build pbzip2 pigz pkg-config \
           python3-dev python3-setuptools rsync subversion swig texinfo time u-boot-tools \
-          unzip wget xsltproc xxd zlib1g-dev zstd python2
+          unzip wget xsltproc xxd zlib1g-dev zstd python2 
+        git config --global url."https://github.com/".insteadOf git://github.com/
     
     - name: 克隆 OpenWrt 并切换到对应的版本  ${{ env.TAG }}
       run: |
@@ -53,7 +54,7 @@ jobs:
         git checkout ${{ env.TAG }} # 来源对应官方下载的 version.buildinfo,不知道为什么，会变成SNAPSHOT,所以还是换成准确的版本吧
         
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
-        echo 'src-git extra https://github.com/nanpuyue/openwrt-extra.git' >> feeds.conf.default
+        echo 'src-git extra git://github.com/nanpuyue/openwrt-extra.git' >> feeds.conf.default
 
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
