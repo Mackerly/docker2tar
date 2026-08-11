@@ -42,6 +42,7 @@ jobs:
       run: |
         cd openwrt
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
+        echo 'src-git extra git://github.com/nanpuyue/openwrt-extra.git' >> feeds.conf.default # yaaw、dnscrypt-proxy、luci-app-aria2、shadowsocks-libev、webui-aria2、libsodium
         sed -i '462s/7872/16000/'  target/linux/ramips/image/mt76x8.mk
         sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
 
