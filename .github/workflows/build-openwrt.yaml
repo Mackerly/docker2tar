@@ -43,7 +43,7 @@ jobs:
       run: |
         cd openwrt
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
-        echo 'src-git extra https://github.com/nanpuyue/openwrt-extra.git' >> feeds.conf.default # yaaw、dnscrypt-proxy、luci-app-aria2、shadowsocks-libev、webui-aria2、libsodium
+        echo 'src-git extra https://github.com/Mackerly/openwrt-extra.git' >> feeds.conf.default # yaaw、dnscrypt-proxy、luci-app-aria2、shadowsocks-libev、webui-aria2、libsodium
         sed -i '462s/7872/16000/'  target/linux/ramips/image/mt76x8.mk
         sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
 
@@ -54,7 +54,7 @@ jobs:
         git checkout ${{ env.TAG }} # 来源对应官方下载的 version.buildinfo,不知道为什么，会变成SNAPSHOT,所以还是换成准确的版本吧
         
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
-        echo 'src-git extra git://github.com/nanpuyue/openwrt-extra.git' >> feeds.conf.default
+        echo 'src-git extra https://github.com/Mackerly/openwrt-extra.git' >> feeds.conf.default
 
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
