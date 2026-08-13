@@ -45,7 +45,8 @@ jobs:
         echo 'src-git Lienol https://github.com/Lienol/openwrt-package.git' >> feeds.conf.default
         echo 'src-git extra https://github.com/Mackerly/openwrt-extra.git' >> feeds.conf.default # yaaw、dnscrypt-proxy、luci-app-aria2、shadowsocks-libev、webui-aria2、libsodium
         sed -i '462s/7872/16000/'  target/linux/ramips/image/mt76x8.mk
-        sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts        
+        sed -i '59s/7b/fb/' target/linux/ramips/dts/mt7628an_mediatek_mt7628an-eval-board.dts
+        
 
     - name: 修改 v19.07.10 的 DTS 和 mk 文件
       if: env.TAG == 'v19.07.10'
@@ -57,7 +58,9 @@ jobs:
         echo 'src-git extra https://github.com/Mackerly/openwrt-extra.git' >> feeds.conf.default
 
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
-        sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk        
+        sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk   
+        # sed -i '800i\  IMAGE_SIZE := $(ralink_default_fw_size_16M)' target/linux/ramips/image/mt7620.mk
+        # sed -i '102s/76/fb/' target/linux/ramips/dts/ZBT-WA05.dts   # 搞不懂，
 
     - name: 自定义Board Config，如果版本是 v19.07.10
       if: env.TAG == 'v19.07.10'
