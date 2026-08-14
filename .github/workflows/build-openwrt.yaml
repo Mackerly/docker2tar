@@ -4,6 +4,11 @@ on:
   # push:
   #   branches: [ main ]
   workflow_dispatch:
+    inputs:
+    DEVICE:
+      description: '请填写设备的名称 ZBT-WE1226 ZBT-WA05'
+      required: true
+      default: 'ZBT-WE1226'
 
 env:
   TZ: Asia/Shanghai
@@ -59,8 +64,8 @@ jobs:
 
         sed -i '106s/7b/fb/' target/linux/ramips/dts/ZBT-WE1226.dts
         sed -i '473s/8M/16M/'  target/linux/ramips/image/mt76x8.mk   
-        # sed -i '800i\  IMAGE_SIZE := $(ralink_default_fw_size_16M)' target/linux/ramips/image/mt7620.mk
-        # sed -i '102s/76/fb/' target/linux/ramips/dts/ZBT-WA05.dts   # 搞不懂，
+        sed -i '800i\  IMAGE_SIZE := $(ralink_default_fw_size_16M)' target/linux/ramips/image/mt7620.mk
+        sed -i '102s/76/fb/' target/linux/ramips/dts/ZBT-WA05.dts   # 搞不懂，
 
     - name: 自定义Board Config，如果版本是 v19.07.10
       if: env.TAG == 'v19.07.10'
@@ -112,19 +117,30 @@ jobs:
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
+        [ -e .config ] && rm .config
     
+    - name: 复制 ZBT-WE1226 配置文件
+      if: ${{ github.event.inputs.DEVICE }} == "ZBT-WE1226"
+      run: |
+        cd openwrt
+        # 从仓库中复制预配置的 .config
+        cp "${{ github.workspace }}/openwrt_config/ZBT-WE1226.config" .config
+
+    - name: 复制 ZBT-WA05 配置文件
+      if: ${{ github.event.inputs.DEVICE }} == "ZBT-WA05"
+      run: |
+        cd openwrt
+        # 从仓库中复制预配置的 .config
+        cp "${{ github.workspace }}/openwrt_config/ZBT-WA05.config" .config
+
     - name: 应用配置文件
       run: |
         cd openwrt
-        [ -e .config ] && rm .config
-        # 从仓库中复制预配置的 .config
-        # cp "${{ github.workspace }}/openwrt_config/76x8.config" .config
-        cp "${{ github.workspace }}/openwrt_config/ZBT-WE1226.config" .config
         make defconfig
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
-    
+
     - name: 编译
       id: compile
       run: |
