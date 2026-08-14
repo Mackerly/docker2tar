@@ -5,10 +5,10 @@ on:
   #   branches: [ main ]
   workflow_dispatch:
     inputs:
-    DEVICE:
-      description: '请填写设备的名称 ZBT-WE1226 ZBT-WA05'
-      required: true
-      default: 'ZBT-WE1226'
+      DEVICE:
+        description: '请填写设备的名称 ZBT-WE1226 ZBT-WA05'
+        required: true
+        default: 'ZBT-WE1226'
 
 env:
   TZ: Asia/Shanghai
