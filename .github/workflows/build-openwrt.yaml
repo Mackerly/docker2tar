@@ -135,7 +135,7 @@ jobs:
         [ -e .config ] && rm .config
         # 从仓库中复制预配置的 .config
         cp "${{ github.workspace }}/openwrt_config/ZBT-WA05.config" .config
-        rm files/etc/board.json
+        rm files/etc/zbt-we1226.board.json
 
     - name: 应用配置文件
       run: |
