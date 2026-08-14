@@ -117,19 +117,22 @@ jobs:
         cd openwrt
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        [ -e .config ] && rm .config
+        
     
     - name: 复制 ZBT-WE1226 配置文件
       if: github.event.inputs.DEVICE == 'ZBT-WE1226'
       run: |
         cd openwrt
+        [ -e .config ] && rm .config
         # 从仓库中复制预配置的 .config
         cp "${{ github.workspace }}/openwrt_config/ZBT-WE1226.config" .config
+        rm files/etc/zbt-wa05.board.json
 
     - name: 复制 ZBT-WA05 配置文件
       if: github.event.inputs.DEVICE == 'ZBT-WA05'
       run: |
         cd openwrt
+        [ -e .config ] && rm .config
         # 从仓库中复制预配置的 .config
         cp "${{ github.workspace }}/openwrt_config/ZBT-WA05.config" .config
         rm files/etc/board.json
