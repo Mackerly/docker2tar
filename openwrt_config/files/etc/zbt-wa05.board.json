@@ -1,0 +1,73 @@
+{
+	"model": {
+		"id": "zbt-wa05",
+		"name": "Zbtlink ZBT-WA05"
+	},
+	"led": {
+		"wifi_led": {
+			"name": "wifi",
+			"sysfs": "zbt-wa05:blue:air",
+			"type": "netdev",
+			"device": "wlan0",
+			"mode": "link tx rx"
+		}
+	},
+	"switch": {
+		"switch0": {
+			"enable": true,
+			"reset": true,
+			"ports": [
+				{
+					"num": 1,
+					"role": "lan"
+				},
+				{
+					"num": 2,
+					"role": "lan"
+				},
+				{
+					"num": 3,
+					"role": "lan"
+				},
+				{
+					"num": 4,
+					"role": "wan"
+				},
+				{
+					"num": 0,
+					"role": "lan"
+				},
+				{
+					"num": 6,
+					"device": "eth0",
+					"need_tag": false,
+					"want_untag": false
+				}
+			],
+			"roles": [
+				{
+					"role": "lan",
+					"ports": "0 1 2 3 6t",
+					"device": "eth0.1"
+				},
+				{
+					"role": "wan",
+					"ports": "4 6t",
+					"device": "eth0.2"
+				}
+			]
+		}
+	},
+	"network": {
+		"lan": {
+			"ifname": "eth0.1",
+			"protocol": "static",
+			"macaddr": "78:a3:51:e9:d0:10"
+		},
+		"wan": {
+			"ifname": "eth0.2",
+			"protocol": "dhcp",
+			"macaddr": "78:a3:51:e9:d0:11"
+		}
+	}
+}
