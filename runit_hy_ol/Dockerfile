@@ -19,8 +19,8 @@ RUN apk update && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     wget https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     chmod +x /usr/bin/hysteria-linux-amd64 && \
-    openssl genrsa -out /hy2.key 2048 && \
-    openssl req -new -x509 -key /hy2.key -out /hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=www.ooyy.com" && \
+    openssl genrsa -out /data/hysteria2/hy2.key 2048 && \
+    openssl req -new -x509 -key /data/hysteria2/hy2.key -out /data/hysteria2/hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=www.ooyy.com" && \
     mkdir -p /etc/service/hysteria /etc/service/openlist && \
     echo '#!/bin/sh' > /etc/service/hysteria/run && \
     echo 'exec /usr/bin/hysteria-linux-amd64 server -c /data/hysteria2/server.yml' >> /etc/service/hysteria/run && \
