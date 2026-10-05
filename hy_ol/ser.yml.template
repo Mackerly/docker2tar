@@ -1,8 +1,8 @@
 listen: :${PORT}
 speedTest: true
 tls: 
-  cert: /data/hysteria2/hy2.crt
-  key: /data/hysteria2/hy2.key
+  cert: /hy2.crt
+  key: /hy2.key
   sniGuard: disable
 auth:
   type: password
