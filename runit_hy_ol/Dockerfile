@@ -16,6 +16,7 @@ USER root
 RUN apk update && \
     apk add --no-cache vim  openssl envsubst wget bash gettext tzdata ca-certificates curl runit sqlite && \
     rm -rf /var/cache/apk/* && \
+    mkdir /data/hysteria2/ -p && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     wget https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     chmod +x /usr/bin/hysteria-linux-amd64 && \
