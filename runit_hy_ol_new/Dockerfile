@@ -20,6 +20,11 @@ RUN apk update && \
     mkdir -p /etc/data/hysteria2/cert/ /etc/data/openlist/data/ && \
     mkdir -p /etc/service/hysteria /etc/service/openlist && \
     echo '#!/bin/sh' > /etc/service/hysteria/run && \
+    echo 'mkdir -p /etc/data/hysteria2/cert' >> /etc/service/hysteria/run && \
+    echo 'if [ ! -f /etc/data/hysteria2/cert/hy2.key ]; then' >> /etc/service/hysteria/run && \
+    echo '    openssl genrsa -out /etc/data/hysteria2/cert/hy2.key 2048' >> /etc/service/hysteria/run && \
+    echo '    openssl req -new -x509 -key /etc/data/hysteria2/cert/hy2.key -out /etc/data/hysteria2/cert/hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=://ooyy.com"' >> /etc/service/hysteria/run && \
+    echo 'fi' >> /etc/service/hysteria/run && \
     echo 'exec /usr/bin/hysteria-linux-amd64 server -c /etc/data/hysteria2/server.yml' >> /etc/service/hysteria/run && \
     chmod +x /etc/service/hysteria/run && \
     echo '#!/bin/sh' > /etc/service/openlist/run && \
