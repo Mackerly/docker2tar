@@ -1,0 +1,9 @@
+listen: :${PORT}
+speedTest: true
+tls: 
+  cert: /etc/data/hysteria2/cert/hy2.key
+  key: /etc/data/hysteria2/cert/hy2.crt
+  sniGuard: disable
+auth:
+  type: password
+  password: ${PASSWORD}
