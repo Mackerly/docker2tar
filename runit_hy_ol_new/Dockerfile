@@ -10,7 +10,7 @@ COPY runit_hy_ol_new/ser.yml.template runit_hy_ol_new/entrypoint.sh /
 
 USER root
 
-# 更新包索引并安装 supervisor 和 nginx
+# 更新包索引并安装需要的包
 RUN apk update && \
     apk add --no-cache vim  openssl envsubst wget bash gettext tzdata ca-certificates curl runit sqlite && \
     rm -rf /var/cache/apk/* && \
@@ -30,10 +30,10 @@ RUN apk update && \
     chmod +x /etc/service/openlist/run && \
     chmod +x /entrypoint.sh 
 
-VOLUME ["/etc/data/"] 
+VOLUME ["/etc/data/","/etc/data/hysteria2/cert/","/etc/data/openlist/data/"] 
 
-# 暴露 iopenlist 5244 5245 supervisord 9001 的默认端口
-EXPOSE 5244 9001
+# 暴露 iopenlist 5244 5245 的默认端口
+EXPOSE 5244 
 
 # 设置入口点
 ENTRYPOINT ["/entrypoint.sh"]
