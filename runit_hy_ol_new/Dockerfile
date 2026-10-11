@@ -17,10 +17,7 @@ RUN apk update && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     wget https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     chmod +x /usr/bin/hysteria-linux-amd64 && \
-    mkdir /etc/data/hysteria2/cert/ -p && \
-    mkdir /etc/data/openlist/data/ -p && \
-    openssl genrsa -out /etc/data/hysteria2/cert/hy2.key 2048 && \
-    openssl req -new -x509 -key /etc/data/hysteria2/cert/hy2.key -out /etc/data/hysteria2/cert/hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=www.ooyy.com" && \
+    mkdir -p /etc/data/hysteria2/cert/ /etc/data/openlist/data/ && \
     mkdir -p /etc/service/hysteria /etc/service/openlist && \
     echo '#!/bin/sh' > /etc/service/hysteria/run && \
     echo 'exec /usr/bin/hysteria-linux-amd64 server -c /etc/data/hysteria2/server.yml' >> /etc/service/hysteria/run && \
@@ -30,7 +27,7 @@ RUN apk update && \
     chmod +x /etc/service/openlist/run && \
     chmod +x /entrypoint.sh 
 
-VOLUME ["/etc/data/","/etc/data/hysteria2/cert/","/etc/data/openlist/data/"] 
+VOLUME ["/etc/data/"] 
 
 # 暴露 iopenlist 5244 5245 的默认端口
 EXPOSE 5244 
