@@ -18,6 +18,7 @@ RUN apk update && \
     wget https://github.com/apernet/hysteria/releases/latest/download/hysteria-linux-amd64 --output-document=/usr/bin/hysteria-linux-amd64 && \
     chmod +x /usr/bin/hysteria-linux-amd64 && \
     mkdir /etc/data/hysteria2/cert/ -p && \
+    mkdir /etc/data/openlist/data/ -p && \
     openssl genrsa -out /etc/data/hysteria2/cert/hy2.key 2048 && \
     openssl req -new -x509 -key /etc/data/hysteria2/cert/hy2.key -out /etc/data/hysteria2/cert/hy2.crt -days 36500 -subj "/C=HK/ST=Hong Kong/L=Hong Kong/O=ooyy/OU=www.xxx/CN=www.ooyy.com" && \
     mkdir -p /etc/service/hysteria /etc/service/openlist && \
